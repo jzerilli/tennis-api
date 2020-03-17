@@ -2,7 +2,16 @@
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import and_
 from sqlalchemy import func
+from sqlalchemy import desc
 #Instantiating sqlalchemy object
+
+DEFAULT_HEIGHT = 170
+DEFAULT_AGE = 28
+DEFAULT_RANK = 1000
+DEFAULT_BP_SAVED = 0
+DEFAULT_BP_CONVERT = 0
+DEFAULT_HAND = 0
+
 db = SQLAlchemy()
 #Creating database class
 class Match(db.Model):
@@ -57,22 +66,6 @@ class Match(db.Model):
     loser_rank = db.Column(db.Integer)
     loser_rank_points = db.Column(db.Integer)
 
-
-
-
-
-
-    # def __init__(self, title, director, genre, collection):                   
-    #     self.title = title        
-    #     self.director = director        
-    #     self.genre = genre        
-    #     self.collection = collection            
-    
-#     #Method to show data as dictionary object
-#     def json(self):        
-#         return {'Title': self.title, 'Director': self.director, 'Genre': self.genre, 'Collection': self.collection}        
- 
-#     #Method to find the query movie is existing or not
     @classmethod    
     def get_wins_vs_opponent(cls, winner, loser):        
         return db.session.query(Match).filter(and_( 
@@ -92,7 +85,7 @@ class Match(db.Model):
         if bp_faced and bp_saved:
             return bp_saved/bp_faced
         else:
-            return 0
+            return DEFAULT_BP_SAVED
 
     @classmethod    
     def get_bp_converted(cls, player):        
@@ -106,18 +99,94 @@ class Match(db.Model):
         if bp_faced and bp_saved:
             return 1 - bp_saved/bp_faced
         else:
-            return 0
+            return DEFAULT_BP_CONVERT
+
+    @classmethod    
+    def get_rank(cls, player):        
+        win_date, win_rank =  db.session.query(Match).with_entities(Match.tourney_date, Match.winner_rank).filter(
+            Match.winner_name == player
+        ).order_by(Match.tourney_date.desc()).first()
+        
+        loss_date, loss_rank =  db.session.query(Match).with_entities(Match.tourney_date, Match.loser_rank).filter(
+            Match.loser_name == player
+        ).order_by(Match.tourney_date.desc()).first()
+
+        if not win_date and not loss_date:
+            return DEFAULT_RANK
+        
+        if not win_date or not loss_date:
+            if win_date:
+                return win_rank
+            else:
+                return loss_rank
+
+        if win_date > loss_date:
+            return win_rank
+        else:
+            return loss_rank
+
+    @classmethod    
+    def get_age(cls, player):        
+        win_date, win_age =  db.session.query(Match).with_entities(Match.tourney_date, Match.winner_age).filter(
+            Match.winner_name == player
+        ).order_by(Match.tourney_date.desc()).first()
+        
+        loss_date, loss_age =  db.session.query(Match).with_entities(Match.tourney_date, Match.loser_age).filter(
+            Match.loser_name == player
+        ).order_by(Match.tourney_date.desc()).first()
+
+        if not win_date and not loss_date:
+            return DEFAULT_AGE
+        
+        if not win_date or not loss_date:
+            if win_date:
+                return win_age
+            else:
+                return loss_age
+
+        if win_date > loss_date:
+            return win_age
+        else:
+            return loss_age
+
+    @classmethod    
+    def get_height(cls, player):        
+        win_date, win_height =  db.session.query(Match).with_entities(Match.tourney_date, Match.winner_ht).filter(
+            Match.winner_name == player
+        ).order_by(Match.tourney_date.desc()).first()
+        
+        loss_date, loss_height =  db.session.query(Match).with_entities(Match.tourney_date, Match.loser_ht).filter(
+            Match.loser_name == player
+        ).order_by(Match.tourney_date.desc()).first()
+
+        if win_date:
+            return win_height
+        if loss_date:
+            return loss_height
+        else:
+            return DEFAULT_HEIGHT
+
+    @classmethod 
+    def get_hand(cls, player):        
+        win_hand =  db.session.query(Match).with_entities(Match.winner_hand).filter(
+            Match.winner_name == player
+        ).order_by(Match.tourney_date.desc()).first()
+        
+        loss_hand =  db.session.query(Match).with_entities(Match.loser_hand).filter(
+            Match.loser_name == player
+        ).order_by(Match.tourney_date.desc()).first()
+
+        if win_hand:
+            if win_hand[0] == 'R':
+                return 0
+            else:
+                return 1
+        elif loss_hand:
+            if loss_hand[0] == 'R':
+                return 0
+            else:
+                return 1
+        else:
+            return DEFAULT_HAND
 
        
-
-    #     SELECT matches.l_bpSaved as bpsaved,  matches.l_bpFaced as bpfaced
-    #     FROM matches
-    #     WHERE matches.winner_name = 'Rafael Nadal'
-# #Method to save data to database
-#     def save_to(self):        
-#         db.session.add(self)        
-#         db.session.commit()
-# #Method to delete data from database
-#     def delete_(self):        
-#         db.session.delete(self)        
-#         db.session.commit()
