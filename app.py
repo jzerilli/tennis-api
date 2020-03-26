@@ -1,5 +1,6 @@
 from flask import Flask
 from flask_restful import reqparse, abort, Api, Resource
+from flask_cors import CORS
 import xgboost as xgb
 import numpy as np
 from base import Match, db
@@ -7,6 +8,7 @@ import os
 
 app = Flask(__name__)
 api = Api(app)
+CORS(app)
 
 app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL')
 
