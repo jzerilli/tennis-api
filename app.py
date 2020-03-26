@@ -9,11 +9,12 @@ import os
 app = Flask(__name__)
 api = Api(app)
 CORS(app)
+cors = CORS(app, resources={r"*": {"origins": "*"}})
 
+app.config['CORS_HEADERS'] = 'Content-Type'
 app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL')
-
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-app.config['PROPAGATE_EXCEPTIONS'] = True 
+app.config['PROPAGATE_EXCEPTIONS'] = False
 
 db.init_app(app)
 app.app_context().push()
@@ -25,7 +26,6 @@ parser.add_argument('surface')
 
 bst = xgb.Booster()  # init model
 bst.load_model('final.model')  # load data
-
 
 
 class PredictMatch(Resource):
