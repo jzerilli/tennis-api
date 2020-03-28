@@ -80,6 +80,17 @@ class Match(db.Model):
             query_filter
         )).count()
 
+    @classmethod    
+    def get_player_names(cls):
+
+        year_ago = cls.get_date() - relativedelta(years=1) 
+        
+        result =  db.session.query(Match).with_entities(Match.winner_name).filter(
+            Match.tourney_date>=year_ago
+        )
+
+        return [r[0] for r in result]
+
 
 
     @classmethod    

@@ -5,6 +5,7 @@ import xgboost as xgb
 import numpy as np
 from base import Match, db
 import os
+import json
 
 app = Flask(__name__)
 api = Api(app)
@@ -40,7 +41,6 @@ class PredictMatch(Resource):
         prediction_data = []
         for i in range(15):
             prediction_data.append(player1_stats[i] - player2_stats[i])
-
         prediction_data = np.array(prediction_data)
         dtest = xgb.DMatrix(np.asmatrix(prediction_data))
         win_probability = bst.predict(dtest)[0]
@@ -55,7 +55,7 @@ class PredictMatch(Resource):
 class PlayerList(Resource):
     def get(self):
         #return a list of players, rankings, etc
-        return "player list"
+        return Match.get_player_names()
 
 
 # Setup the Api resource routing here
@@ -64,4 +64,4 @@ api.add_resource(PredictMatch, '/')
 api.add_resource(PlayerList, '/players')
 
 if __name__ == '__main__':
-    app.run()
+    app.run(debug=True)
