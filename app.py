@@ -64,4 +64,4 @@ api.add_resource(PredictMatch, '/')
 api.add_resource(PlayerList, '/players')
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run()
