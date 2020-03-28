@@ -87,7 +87,7 @@ class Match(db.Model):
         
         result =  db.session.query(Match).with_entities(Match.winner_name).filter(
             Match.tourney_date>=year_ago
-        )
+        ).distinct()
 
         return [r[0] for r in result]
 
