@@ -270,9 +270,9 @@ class Match(db.Model):
             Match.loser_name == player
         ).order_by(Match.tourney_date.desc()).first()
 
-        if win_date:
+        if win_date and win_height:
             return win_height
-        if loss_date:
+        if loss_date and loss_height:
             return loss_height
         else:
             return DEFAULT_HEIGHT
