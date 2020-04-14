@@ -3,6 +3,7 @@
 This is an api to predict the winner of a ATP Tour match. It was made using Flask, Sqlalchemy, and XGBoost.
 
 The api is currently being hosted at https://tennis-prediction-api.herokuapp.com
+
 example usage of the api at https://tennis-match-predictor.herokuapp.com/
 
 ### Current features
