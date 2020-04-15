@@ -1,10 +1,12 @@
 # tennis-api
 
-This is an api to predict the winner of a ATP Tour match. It was made using Flask, Sqlalchemy, and XGBoost.
+This is an api to predict the winner of a ATP Tour match. It was made using Flask, Sqlalchemy, and XGBoost. I created this because I wanted to get some more practice with web programming as well as data science techniques (I also am a huge tennis fan).
 
 The api is currently being hosted at https://tennis-prediction-api.herokuapp.com
 
-example usage of the api at https://tennis-match-predictor.herokuapp.com/
+Try the react app that uses the the api at https://tennis-match-predictor.herokuapp.com/
+
+This XGBoost model was trained on an dataset of tennis matches. The original dataset was gathered by Jeff Sackmann and can be found here: https://github.com/JeffSackmann/tennis_atp
 
 ### Current features
 
